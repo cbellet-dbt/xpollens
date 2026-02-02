@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xpollens - Évaluation Technique dbt Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(253, 102, 3, 0.15);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        header .subtitle {
+            font-size: 1.4em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        header .meta {
+            font-size: 0.95em;
+            opacity: 0.85;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* NAVIGATION */
+        nav {
+            background: white;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            display: block;
+            padding: 18px 20px;
+            color: #fd6603;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-icon {
+            font-size: 1.2em;
+            display: inline-block;
+        }
+
+        nav a:hover, nav a.active {
+            background: #fff3e0;
+            border-bottom-color: #fd6603;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            padding: 40px;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin: 40px 0 30px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fd6603;
+        }
+
+        .subsection-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin: 30px 0 20px 0;
+            padding-left: 15px;
+            border-left: 4px solid #fd6603;
+        }
+
+        /* CARDS */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: #fd6603;
+        }
+
+        .card h3 {
+            color: #fd6603;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .card p {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* ISSUE BOXES */
+        .issue-box {
+            background: #fff3e0;
+            border-left: 4px solid #fd6603;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            color: #333;
+        }
+
+        .issue-box.critical {
+            background: #fce4ec;
+            border-left-color: #d32f2f;
+            color: #c62828;
+        }
+
+        /* COMPARISON */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .before, .after {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .before h4 {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .after h4 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-icon {
+            font-size: 1.5em;
+        }
+
+        /* TABLES */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table thead {
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            color: white;
+        }
+
+        .comparison-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        /* HIGHLIGHT BOXES */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(253, 102, 3, 0.05) 0%, rgba(123, 45, 228, 0.05) 100%);
+            border-left: 4px solid #fd6603;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .highlight-box h4 {
+            color: #fd6603;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        /* ROI METRICS */
+        .roi-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .roi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid #fd6603;
+        }
+
+        .roi-card .value {
+            font-size: 2.2em;
+            color: #fd6603;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .roi-card .label {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            width: 2px;
+            height: 100%;
+            background: #fd6603;
+        }
+
+        .timeline-item:last-child:before {
+            display: none;
+        }
+
+        .timeline-dot {
+            width: 32px;
+            height: 32px;
+            background: #fd6603;
+            border-radius: 50%;
+            margin-right: 30px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .timeline-content h4 {
+            color: #fd6603;
+            margin-bottom: 8px;
+        }
+
+        /* CASE STUDY BOX */
+        .case-study {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            border-left: 4px solid #061ee7;
+        }
+
+        .case-study h4 {
+            color: #061ee7;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .case-study .metric-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .metric-item {
+            color: #666;
+        }
+
+        .metric-item .value {
+            color: #fd6603;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 102, 3, 0.3);
+        }
+
+        /* LISTS */
+        ul {
+            margin-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            header .subtitle { font-size: 1em; }
+            .section-title { font-size: 1.8em; }
+            nav a { padding: 12px 12px; font-size: 0.8em; }
+            main { padding: 20px; }
+            .comparison-container { grid-template-columns: 1fr; }
+        }
+
+        /* POV TRACKING STYLES */
+        .pov-tracking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .pov-tracking-table thead {
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            color: white;
+        }
+
+        .pov-tracking-table th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .pov-tracking-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+
+        .pov-tracking-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .pov-tracking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .status-in-progress {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-validated {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-blocked {
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #fd6603;
+        }
+
+        .owner-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            font-size: 0.85em;
+            color: #555;
+            border: 1px solid #e0e0e0;
+        }
+
+        .pov-section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pov-section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+
+        .pov-section-icon.technical {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+
+        .pov-section-icon.business {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+
+        .pov-section-icon.stakeholders {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        }
+
+        .pov-section-icon.timeline {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+
+        .kpi-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: border-color 0.3s ease;
+        }
+
+        .kpi-input:focus {
+            outline: none;
+            border-color: #fd6603;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            min-height: 60px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: #fd6603;
+        }
+
+        .pov-progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .pov-progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .pov-summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid #fd6603;
+        }
+
+        .pov-summary-card .count {
+            font-size: 2em;
+            font-weight: 700;
+            color: #fd6603;
+        }
+
+        .pov-summary-card .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .editable-field {
+            background: #fafafa;
+            border: 1px dashed #ccc;
+            padding: 8px 12px;
+            border-radius: 4px;
+            min-height: 24px;
+        }
+
+        .editable-field:empty:before {
+            content: attr(data-placeholder);
+            color: #999;
+        }
+
+        /* SAVE/LOAD TOOLBAR */
+        .save-toolbar {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .save-btn, .load-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #fd6603 0%, #7b2de4 100%);
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 102, 3, 0.4);
+        }
+
+        .load-btn {
+            background: white;
+            color: #fd6603;
+            border: 2px solid #fd6603;
+        }
+
+        .load-btn:hover {
+            background: #fff3e0;
+            transform: translateY(-2px);
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background: #2e7d32;
+        }
+
+        .toast.error {
+            background: #c62828;
+        }
+
+        .toast.info {
+            background: #1565c0;
+        }
+
+        /* Tech stack badge */
+        .tech-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e3f2fd;
+            color: #1565c0;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Évaluation Technique dbt Platform</h1>
+        <div class="subtitle">Xpollens</div>
+        <div class="meta">
+            <span>📊 POC dbt Cloud</span>
+            <span>🔧 dbt Labs</span>
+            <span>📅 Mis à jour: 02 Février 2026</span>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a class="nav-link active" onclick="showSection(event, 'executive')"><span class="nav-icon">📋</span> Synthèse</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'context')"><span class="nav-icon">📍</span> Contexte</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'actual')"><span class="nav-icon">⚠️</span> État Actuel</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'future')"><span class="nav-icon">🚀</span> État Cible</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'solution')"><span class="nav-icon">🔧</span> Solution dbt</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'roi')"><span class="nav-icon">💰</span> ROI</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'cases')"><span class="nav-icon">📚</span> Références</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'roadmap')"><span class="nav-icon">🗺️</span> Roadmap</a></li>
+            <li><a class="nav-link" onclick="showSection(event, 'pov-tracking')"><span class="nav-icon">📋</span> Suivi POC</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- SECTION 1: EXECUTIVE SUMMARY -->
+        <section id="executive" class="active">
+            <h2 class="section-title">📋 Synthèse Exécutive</h2>
+
+            <div class="highlight-box">
+                <h4>Contexte du POC</h4>
+                <p>Xpollens, acteur du secteur des paiements, souhaite évaluer dbt Platform pour moderniser sa plateforme data et autonomiser ses data analysts dans la création de tables matérialisées. L'équipe data de 6 personnes (2 data engineers, 2 data analysts) utilise actuellement une stack Microsoft (Synapse Analytics serverless, Power BI, Azure DevOps) avec une architecture en médaillon (Bronze, Silver, Gold).</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>💡 Opportunité</h3>
+                    <p>Autonomiser les data analysts pour créer des tables matérialisées sans intervention des data engineers, tout en maintenant un processus de validation (code review) et une gouvernance des données.</p>
+                </div>
+                <div class="card">
+                    <h3>🎯 Solution</h3>
+                    <p>dbt Platform avec l'IDE intégrée et Canvas (interface low-code) permettant aux analysts de créer des modèles en SQL avec validation automatique via CI/CD et Azure DevOps.</p>
+                </div>
+                <div class="card">
+                    <h3>💰 Impact Business</h3>
+                    <p>Réduction du temps de livraison des nouveaux modèles, amélioration de la qualité des données grâce aux tests automatisés, et documentation centralisée du Data Lake.</p>
+                </div>
+            </div>
+
+            <div class="roi-metrics">
+                <div class="roi-card">
+                    <div class="label">Objectif Productivité</div>
+                    <div class="value">+25%</div>
+                    <div class="label">gain de temps data engineers</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Autonomie Analysts</div>
+                    <div class="value">3 modèles</div>
+                    <div class="label">créés pendant le POC</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Durée POC</div>
+                    <div class="value">4 sem.</div>
+                    <div class="label">+ 2-3 semaines setup</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Stack Technique</div>
+                    <div class="value">Synapse</div>
+                    <div class="label">Delta Tables + Power BI</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Objectifs du POC</h4>
+                <ol style="margin-left: 20px; margin-top: 15px;">
+                    <li><strong>Objectif 1 - Autonomie Data Analyst:</strong> Permettre aux analysts de créer des tables matérialisées via dbt Platform (IDE + Canvas)</li>
+                    <li><strong>Objectif 2 - Tests de Qualité:</strong> Valider la valeur ajoutée de dbt Cloud pour les tests de qualité de données vs dbt Core</li>
+                    <li><strong>Objectif 3 - Fonctionnalités Enterprise:</strong> Évaluer Semantic Layer, Canvas et Copilot (tier Enterprise)</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CONTEXT -->
+        <section id="context">
+            <h2 class="section-title">📍 Contexte & Organisation</h2>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🏢 Organisation</h3>
+                    <p><strong>Équipe Data:</strong> 6 personnes</p>
+                    <p><strong>Composition:</strong> 2 Data Engineers, 2 Data Analysts</p>
+                    <p><strong>Secteur:</strong> Paiements (exigences réglementaires strictes)</p>
+                    <p><strong>Défi principal:</strong> Autonomiser les data analysts tout en maintenant la gouvernance</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Stack Technique Actuelle</h3>
+                    <p><strong>Data Warehouse:</strong> Azure Synapse Analytics (serverless)</p>
+                    <p><strong>Stockage:</strong> Azure Blob Storage (Delta Tables/Parquet)</p>
+                    <p><strong>Transformations:</strong> Notebooks PySpark + dbt Core</p>
+                    <p><strong>BI:</strong> Power BI (modèles sémantiques)</p>
+                    <p><strong>Git:</strong> Azure DevOps</p>
+                    <p><strong>Documentation:</strong> CasterDoc</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Objectifs Business</h3>
+                    <p><strong>Objectif Principal:</strong> Autonomiser les data analysts pour la création de tables</p>
+                    <p><strong>Contraintes:</strong> Budget limité (startup), sécurité secteur paiement</p>
+                    <p><strong>Timeline:</strong> POC en cours, décision Q1 2025</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Architecture Actuelle</h3>
+            <div class="highlight-box">
+                <h4>Flux de Données Xpollens</h4>
+                <p style="margin-top: 15px;">
+                    <strong>1. Ingestion:</strong> Azure Service Bus → Events JSON → Blob Storage<br>
+                    <strong>2. Traitement:</strong> Notebooks PySpark dans Synapse Analytics<br>
+                    <strong>3. Stockage:</strong> Tables Delta en format Parquet (Silver = historique, Gold = dernière donnée)<br>
+                    <strong>4. Consommation:</strong> Pool SQL serverless → Modèles sémantiques Power BI → Rapports<br>
+                    <strong>5. Fréquence:</strong> Batchs quotidiens (pas de temps réel actuellement)
+                </p>
+            </div>
+
+            <h3 class="subsection-title">Équipe & Contacts POC</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>👥 Équipe Xpollens</h3>
+                    <p><strong>Morgane:</strong> Data Lead / Sponsor</p>
+                    <p><strong>Jean:</strong> Data Engineer (dbt Core)</p>
+                    <p><strong>Sofiane:</strong> Data Engineer</p>
+                    <p><strong>Nadja:</strong> Data / Sécurité</p>
+                    <p><strong>Emma Tidieu:</strong> Analytics Engineer (POC)</p>
+                    <p><strong>Olivier:</strong> Stakeholder</p>
+                </div>
+                <div class="card">
+                    <h3>🔧 Équipe dbt Labs</h3>
+                    <p><strong>Charlotte:</strong> Solution Architect</p>
+                    <p><strong>Olivier:</strong> Account Executive</p>
+                    <p><strong>Support:</strong> Anglais (French speaker en preview)</p>
+                </div>
+                <div class="card">
+                    <h3>📅 Points de Suivi</h3>
+                    <p><strong>Setup:</strong> Semaine du 19 janvier</p>
+                    <p><strong>Kickoff POC:</strong> 2 février 2025</p>
+                    <p><strong>Points hebdo:</strong> À définir</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ACTUAL STATE & PAINS -->
+        <section id="actual">
+            <h2 class="section-title">⚠️ État Actuel & Points de Friction</h2>
+
+            <h3 class="subsection-title">1️⃣ Dépendance Data Engineers</h3>
+            <div class="issue-box critical">
+                <strong>Problème:</strong> Les data analysts ne peuvent pas créer de tables matérialisées sans l'intervention des data engineers<br>
+                <strong>Impact:</strong> Files d'attente pour les demandes, data engineers surchargés de demandes répétitives<br>
+                <strong>Cause:</strong> Transformations Power BI non matérialisées, absence d'interface accessible pour les analysts
+            </div>
+
+            <h3 class="subsection-title">2️⃣ Performance des Requêtes Power BI</h3>
+            <div class="issue-box critical">
+                <strong>Problème:</strong> Modèle sémantique unique alimentant 90% des dashboards, temps de requête parfois longs<br>
+                <strong>Impact:</strong> Expérience utilisateur dégradée, impossibilité de filtrer efficacement pour les dashboards client-spécifiques<br>
+                <strong>Cause:</strong> Données non matérialisées en amont, tout calculé à la volée dans Power BI
+            </div>
+
+            <h3 class="subsection-title">3️⃣ Gestion des Tests de Qualité</h3>
+            <div class="issue-box">
+                <strong>Challenge:</strong> Tests de qualité existants sur dbt Core (~40 tables testées) mais dashboard de résultats custom<br>
+                <strong>Limitation:</strong> Pas de visualisation intégrée, rapport Power BI qui parse les fichiers de résultats<br>
+                <strong>Maintenance:</strong> Fichiers YAML complexes à maintenir pour les non-développeurs
+            </div>
+
+            <h3 class="subsection-title">4️⃣ Documentation du Data Lake</h3>
+            <div class="issue-box">
+                <strong>Problème:</strong> Documentation insuffisante du Data Lake<br>
+                <strong>Impact:</strong> Difficultés d'onboarding, dépendance aux personnes clés<br>
+                <strong>Approche actuelle:</strong> CasterDoc utilisé mais pas exhaustif
+            </div>
+
+            <h3 class="subsection-title">5️⃣ Règles Métier Complexes</h3>
+            <div class="issue-box">
+                <strong>Challenge:</strong> Règles de gestion variant selon les clients/partenaires (ex: opérations SEPA vs carte)<br>
+                <strong>Exemple:</strong> Tables séparées pour opérations SEPA et carte nécessitant des unions fréquentes<br>
+                <strong>Question:</strong> Faut-il unifier dans Gold ou dans le Semantic Layer?
+            </div>
+
+            <h3 class="subsection-title">Comparaison: État Actuel vs Cible</h3>
+            <div class="comparison-container">
+                <div class="before">
+                    <h4>❌ Aujourd'hui</h4>
+                    <div class="metric">
+                        <span class="metric-icon">👩‍💻</span>
+                        <span><strong>Création de tables:</strong> Data Engineers uniquement</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">⏱️</span>
+                        <span><strong>Temps d'exécution:</strong> Variable selon la charge</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">🧪</span>
+                        <span><strong>Tests:</strong> dbt Core + rapport custom</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">📚</span>
+                        <span><strong>Documentation:</strong> CasterDoc (partielle)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">🔄</span>
+                        <span><strong>Workflow:</strong> Notebooks PySpark + dbt Core</span>
+                    </div>
+                </div>
+
+                <div class="after">
+                    <h4>✅ Avec dbt Platform</h4>
+                    <div class="metric">
+                        <span class="metric-icon">👥</span>
+                        <span><strong>Création de tables:</strong> Analysts autonomes (avec review)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">⚡</span>
+                        <span><strong>Temps d'exécution:</strong> Optimisé via dbt Fusion</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">✓</span>
+                        <span><strong>Tests:</strong> Dashboard intégré + alerting</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">📖</span>
+                        <span><strong>Documentation:</strong> Auto-générée via Copilot</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">🎯</span>
+                        <span><strong>Workflow:</strong> IDE web + Canvas + CI/CD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FUTURE STATE -->
+        <section id="future">
+            <h2 class="section-title">🚀 État Cible avec dbt Platform</h2>
+
+            <h3 class="subsection-title">Architecture Cible Proposée</h3>
+            <div class="card-grid">
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>1️⃣ Sources & Ingestion</h3>
+                    <p>Azure Service Bus → Blob Storage (inchangé). Events JSON stockés pour traitement batch quotidien.</p>
+                </div>
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>2️⃣ Transformations Bronze/Silver</h3>
+                    <p>Notebooks PySpark existants + dbt pour transformations SQL. Couches Silver avec historique des events.</p>
+                </div>
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>3️⃣ Couche Gold via dbt</h3>
+                    <p>Tables matérialisées créées par data analysts via dbt Platform. Validation CI/CD via Azure DevOps.</p>
+                </div>
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>4️⃣ Semantic Layer (optionnel)</h3>
+                    <p>Métriques unifiées définies au-dessus des transformations. Exposable sur Power BI avec definitions centralisées.</p>
+                </div>
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>5️⃣ Qualité & Gouvernance</h3>
+                    <p>Tests automatiques intégrés, Health Check dans les rapports Power BI, documentation auto-générée.</p>
+                </div>
+                <div class="card" style="border-left: 4px solid #fd6603;">
+                    <h3>6️⃣ Orchestration</h3>
+                    <p>Jobs dbt Cloud avec dbt Fusion pour optimisation des runs. Recalcul intelligent basé sur les modifications.</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Workflow Data Analyst avec dbt Platform</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div>
+                    <h4 style="color: #d32f2f; margin-bottom: 25px; font-size: 1.1em; padding: 15px; background: #fce4ec; border-radius: 6px; text-align: center;">❌ Processus Actuel</h4>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d32f2f; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #d32f2f; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Besoin d'une nouvelle table</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Analyst identifie un besoin métier</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d32f2f; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #d32f2f; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Ticket Data Engineer</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Demande via ticket, attente dans la file</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d32f2f; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #d32f2f; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Développement Notebook</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Data Engineer crée/modifie un notebook</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d32f2f; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #d32f2f; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Validation & Déploiement</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Tests manuels, déploiement en prod</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #fce4ec; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; color: #c62828; font-weight: 600;">
+                        ⏱️ Plusieurs jours à semaines
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="color: #2e7d32; margin-bottom: 25px; font-size: 1.1em; padding: 15px; background: #e8f5e9; border-radius: 6px; text-align: center;">✅ Processus avec dbt Platform</h4>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #2e7d32; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Connexion à dbt Platform</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Analyst accède directement à l'IDE web ou Canvas</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #2e7d32; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Création du modèle SQL</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">SELECT via IDE ou drag & drop via Canvas</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #2e7d32; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <span style="font-weight: 600; color: #2c3e50;">Commit & Pull Request</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Code review par Data Engineer (obligatoire)</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                <div style="background: #2e7d32; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                                <span style="font-weight: 600; color: #2c3e50;">CI/CD Automatique</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9em; margin-left: 47px;">Tests + déploiement automatiques après merge</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; color: #2e7d32; font-weight: 600;">
+                        ⚡ Quelques heures à 1-2 jours
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Améliorations Clés</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Domaine</th>
+                        <th>Approche Actuelle</th>
+                        <th>Avec dbt Platform</th>
+                        <th>Bénéfice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Création de modèles</strong></td>
+                        <td>Notebooks PySpark (Data Engineers)</td>
+                        <td>IDE web + Canvas (Analysts autonomes)</td>
+                        <td>Autonomie, vélocité accrue</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tests de qualité</strong></td>
+                        <td>dbt Core + rapport Power BI custom</td>
+                        <td>Dashboard intégré + alerting</td>
+                        <td>Visibilité immédiate, moins de maintenance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentation</strong></td>
+                        <td>CasterDoc (manuel)</td>
+                        <td>Auto-générée via Copilot</td>
+                        <td>Toujours à jour, onboarding facilité</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validation</strong></td>
+                        <td>Tests manuels</td>
+                        <td>CI/CD automatique avec SlimCI</td>
+                        <td>Détection précoce des erreurs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orchestration</strong></td>
+                        <td>Pipelines Synapse</td>
+                        <td>dbt Fusion (recalcul intelligent)</td>
+                        <td>Coûts optimisés, runs plus rapides</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 5: DBT SOLUTION -->
+        <section id="solution">
+            <h2 class="section-title">🔧 Solution dbt Platform</h2>
+
+            <div class="highlight-box">
+                <h4>Qu'est-ce que dbt?</h4>
+                <p>dbt (data build tool) permet aux analytics engineers d'écrire, tester, documenter et versionner du code de transformation de données en SQL. Plus d'informations sur <a href="https://www.getdbt.com/" target="_blank" style="color: #fd6603; font-weight: 600;">getdbt.com</a></p>
+            </div>
+
+            <h3 class="subsection-title">Fonctionnalités Clés pour Xpollens</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>📝 IDE Web + Canvas</h3>
+                    <p>Interface accessible sans installation. Canvas offre une approche low-code en drag & drop.</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Pas de VS Code requis</li>
+                        <li>Accessible aux data analysts</li>
+                        <li>Canvas: interface visuelle</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><span class="tech-badge">Enterprise only</span> pour Canvas</p>
+                </div>
+
+                <div class="card">
+                    <h3>🧪 Tests Automatisés</h3>
+                    <p>Framework de test intégré avec visualisation des résultats et alerting.</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Tests génériques (unique, not null)</li>
+                        <li>Tests custom</li>
+                        <li>Dashboard de résultats intégré</li>
+                        <li>Health Check pour Power BI</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🤖 Copilot (IA)</h3>
+                    <p>Assistant IA pour générer automatiquement fichiers YAML et documentation.</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Génération de tests YAML</li>
+                        <li>Documentation auto-générée</li>
+                        <li>Best practices intégrées</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><span class="tech-badge">Enterprise only</span></p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Semantic Layer</h3>
+                    <p>Couche de définition des métriques métier au-dessus des transformations.</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Définitions uniques des métriques</li>
+                        <li>Exposable sur Power BI</li>
+                        <li>Pas de duplication de logique</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><span class="tech-badge">Enterprise only</span></p>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 dbt Fusion</h3>
+                    <p>Nouveau moteur d'orchestration optimisé (inclus dans tous les plans).</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Recalcul intelligent</li>
+                        <li>Parallélisation des tâches</li>
+                        <li>Réduction des coûts data warehouse</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Intégrations</h3>
+                    <p>Connexion native à votre stack existante.</p>
+                    <ul style="margin-left: 0; margin-top: 12px;">
+                        <li>Azure Synapse Analytics</li>
+                        <li>Azure DevOps</li>
+                        <li>Power BI (Health Check)</li>
+                        <li>Teams (en preview)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Workflow de Validation (PR Review)</h3>
+            <div class="issue-box">
+                <strong>Processus de Gouvernance Obligatoire:</strong><br><br>
+                Tout code (IDE ou Canvas) passe par le même workflow de validation:
+                <ol style="margin-left: 20px; margin-top: 15px;">
+                    <li>Analyst crée/modifie un modèle SQL</li>
+                    <li>Clic sur "Commit" → Pull Request automatique sur Azure DevOps</li>
+                    <li>Data Engineer fait la code review</li>
+                    <li>CI/CD exécute les tests automatiques</li>
+                    <li>Merge → Déploiement en production</li>
+                </ol>
+                <br>
+                <strong>Note:</strong> Ce processus est natif à dbt Platform et ne peut pas être contourné.
+            </div>
+
+            <h3 class="subsection-title">Comparaison des Plans</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Fonctionnalité</th>
+                        <th>Team</th>
+                        <th>Enterprise</th>
+                        <th>Pertinence Xpollens</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>IDE Web</strong></td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>Essentiel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>dbt Fusion</strong></td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>Essentiel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CI/CD (SlimCI)</strong></td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>Essentiel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tests & Documentation</strong></td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>Essentiel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Canvas (Low-code)</strong></td>
+                        <td>❌</td>
+                        <td>✅</td>
+                        <td>Important pour analysts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Copilot (IA)</strong></td>
+                        <td>❌</td>
+                        <td>✅</td>
+                        <td>Nice-to-have</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semantic Layer</strong></td>
+                        <td>❌</td>
+                        <td>✅</td>
+                        <td>À évaluer pendant POC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SSO / SAML</strong></td>
+                        <td>❌</td>
+                        <td>✅</td>
+                        <td>Important pour sécurité</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">Comparaison dbt Core vs dbt Platform</h3>
+            <div class="highlight-box" style="background: linear-gradient(135deg, #fff3e0 0%, #fff 100%); border-left: 4px solid #fd6603;">
+                <h4>⚠️ Point Important: Évolution des Produits</h4>
+                <p><strong>dbt Platform</strong> est un produit en évolution constante avec des nouvelles fonctionnalités régulières. <strong>dbt Core</strong> reste un projet open-source maintenu, mais ne bénéficiera pas des innovations majeures futures. Cette distinction est importante pour la stratégie data à moyen/long terme.</p>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Aspect</th>
+                        <th style="width: 35%;">dbt Core (Open Source)</th>
+                        <th style="width: 40%;">dbt Platform (Cloud)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>🛠️ Développement & Interface</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interface</strong></td>
+                        <td>CLI uniquement, nécessite VS Code ou éditeur local</td>
+                        <td>IDE Web intégrée + CLI + VS Code Extension + Canvas (low-code)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Installation</strong></td>
+                        <td>Installation locale requise sur chaque poste</td>
+                        <td>Aucune installation, accès navigateur</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accessibilité</strong></td>
+                        <td>Profils techniques uniquement (data engineers)</td>
+                        <td>Data engineers + Data analysts + Métiers (via Canvas)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Création de modèles</strong></td>
+                        <td>Écriture SQL manuelle</td>
+                        <td>SQL manuel + Canvas drag & drop + génération assistée Copilot</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>🧪 Qualité & Tests</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Framework de tests</strong></td>
+                        <td>✅ Fichiers YAML (tests génériques + custom)</td>
+                        <td>✅ Fichiers YAML + génération automatique via Copilot</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visualisation résultats</strong></td>
+                        <td>Logs CLI, nécessite outil externe (ex: Power BI custom)</td>
+                        <td>Dashboard intégré natif avec historique et tendances</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Alerting</strong></td>
+                        <td>À configurer manuellement (scripts, webhooks)</td>
+                        <td>Alerting natif (email, Slack, Teams en preview)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Health Check Power BI</strong></td>
+                        <td>❌ Non disponible</td>
+                        <td>✅ Vérification de cohérence avec les rapports Power BI</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>📖 Documentation & Lineage</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentation</strong></td>
+                        <td>Génération statique (dbt docs generate), maintenance manuelle</td>
+                        <td>Documentation dynamique, auto-générée par Copilot, toujours à jour</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lineage</strong></td>
+                        <td>Lineage modèle (DAG basique)</td>
+                        <td>Lineage modèle + colonne (avec Fusion), comparaison live</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Catalogue de données</strong></td>
+                        <td>dbt docs (statique)</td>
+                        <td>Explorer intégré avec recherche, filtres et métadonnées enrichies</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>🚀 Exécution & Orchestration</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Moteur d'exécution</strong></td>
+                        <td>Exécution séquentielle/parallèle standard</td>
+                        <td>dbt Fusion: recalcul intelligent, ne réexécute que ce qui a changé</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orchestration</strong></td>
+                        <td>Externe (Airflow, Azure Data Factory, cron...)</td>
+                        <td>Scheduler intégré + compatible orchestrateurs externes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Preview des données</strong></td>
+                        <td>Nécessite compilation et exécution complète</td>
+                        <td>Preview instantané avant compilation, comparaison avant/après</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>🔄 CI/CD & Collaboration</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Intégration Git</strong></td>
+                        <td>Manuelle (git clone, push, PR)</td>
+                        <td>Intégration native Azure DevOps/GitHub/GitLab, PR en 1 clic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CI/CD</strong></td>
+                        <td>À configurer (GitHub Actions, Azure Pipelines...)</td>
+                        <td>SlimCI natif: tests auto sur PR, rapport de comparaison</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Environnements</strong></td>
+                        <td>Gestion manuelle (profiles.yml)</td>
+                        <td>Environnements intégrés (dev, staging, prod) avec isolation</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>📊 Semantic Layer & Métriques</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semantic Layer</strong></td>
+                        <td>❌ Non disponible</td>
+                        <td>✅ Définition centralisée des métriques, exposable sur BI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MetricFlow</strong></td>
+                        <td>Disponible séparément (open source)</td>
+                        <td>Intégré nativement avec optimisations</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>🔒 Sécurité & Gouvernance</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Authentification</strong></td>
+                        <td>Gestion locale des credentials</td>
+                        <td>SSO/SAML (Enterprise), OAuth, intégration AD</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit</strong></td>
+                        <td>Logs locaux</td>
+                        <td>Audit trail complet, historique des exécutions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accès aux données</strong></td>
+                        <td>Credentials stockés localement</td>
+                        <td>Métadonnées uniquement, pas d'accès direct aux données sensibles</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td colspan="3"><strong>📈 Évolution & Support</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Roadmap</strong></td>
+                        <td>Maintenance et corrections, peu d'évolutions majeures</td>
+                        <td>Innovations constantes (Canvas, Copilot, Fusion, Semantic Layer...)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Support</strong></td>
+                        <td>Communauté (Slack, GitHub issues)</td>
+                        <td>Support dédié avec SLA + communauté</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Formation</strong></td>
+                        <td>Auto-formation, documentation publique</td>
+                        <td>Onboarding structuré (4 workshops CSM), certifications</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card-grid" style="margin-top: 30px;">
+                <div class="card" style="border-left: 4px solid #2196f3;">
+                    <h3>💡 Cas d'usage dbt Core</h3>
+                    <ul style="margin-left: 0;">
+                        <li>Équipe 100% technique (data engineers expérimentés)</li>
+                        <li>Infrastructure CI/CD déjà mature et maintenue</li>
+                        <li>Budget très contraint, pas de priorité productivité</li>
+                        <li>Pas de besoin d'autonomie des data analysts</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left: 4px solid #4caf50;">
+                    <h3>✅ Cas d'usage dbt Platform</h3>
+                    <ul style="margin-left: 0;">
+                        <li>Volonté d'autonomiser les data analysts</li>
+                        <li>Besoin de gouvernance et traçabilité</li>
+                        <li>Focus sur la productivité et le time-to-value</li>
+                        <li>Stratégie data à moyen/long terme</li>
+                        <li>Besoin de documentation centralisée et à jour</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 20px;">
+                <h4>🎯 Recommandation pour Xpollens</h4>
+                <p>Compte tenu des objectifs identifiés (autonomie des data analysts, amélioration de la qualité, documentation du Data Lake), <strong>dbt Platform</strong> répond mieux aux besoins que dbt Core. Les fonctionnalités Enterprise (Canvas, Copilot, Semantic Layer) sont particulièrement pertinentes pour permettre à Emma et aux futurs analysts de créer des modèles sans expertise SQL avancée.</p>
+            </div>
+        </section>
+        <section id="roi">
+            <h2 class="section-title">💰 Évaluation ROI</h2>
+
+            <h3 class="subsection-title">KPIs à Mesurer pendant le POC</h3>
+            <div class="roi-metrics">
+                <div class="roi-card">
+                    <div class="label">Autonomie de Livraison</div>
+                    <div class="value">À mesurer</div>
+                    <div class="label">% modèles créés par analysts</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Performance de Création</div>
+                    <div class="value">À mesurer</div>
+                    <div class="label">temps d'exécution dbt</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Satisfaction Utilisateur</div>
+                    <div class="value">À mesurer</div>
+                    <div class="label">feedback data analysts</div>
+                </div>
+                <div class="roi-card">
+                    <div class="label">Facilité d'Ajout de Tests</div>
+                    <div class="value">À mesurer</div>
+                    <div class="label">temps vs dbt Core</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Benchmark TF1+ (Référence)</h3>
+            <div class="highlight-box">
+                <h4>Retour d'Expérience TF1+ après 12 mois</h4>
+                <p style="margin-top: 15px;">
+                    <strong>Contexte:</strong> ~15 data engineers + ~15 data analysts<br><br>
+                    <strong>Gains Data Engineers:</strong>
+                </p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>25% de temps gagné</strong> sur les tâches manuelles (documentation, lineage, gouvernance, CI/CD, DevOps)</li>
+                    <li><strong>Onboarding réduit de 1 mois à 1 semaine</strong> pour les nouveaux intervenants</li>
+                    <li>Rentabilisation de la licence dbt (~4000€) dès la compression du temps d'onboarding de 3 semaines</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Gains Data Analysts:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>~30% de temps gagné</strong> grâce à l'autonomie et l'interface accessible</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Qualité des Données:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>268 erreurs/an → 4 erreurs/an</strong> (réduction de 99%)</li>
+                    <li>Économie estimée: ~240 000€ (impact des données erronées)</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Estimation des Coûts</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Élément</th>
+                        <th>Situation Actuelle</th>
+                        <th>Avec dbt Platform</th>
+                        <th>Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Licence dbt</strong></td>
+                        <td>dbt Core (gratuit)</td>
+                        <td>Team ou Enterprise</td>
+                        <td>Coût additionnel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Temps Data Engineers</strong></td>
+                        <td>Demandes répétitives des analysts</td>
+                        <td>Focus sur tâches à valeur ajoutée</td>
+                        <td>Gain estimé: 20-25%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coûts Synapse</strong></td>
+                        <td>Recalcul complet</td>
+                        <td>Recalcul intelligent (dbt Fusion)</td>
+                        <td>Réduction à mesurer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance Tests</strong></td>
+                        <td>Rapport Power BI custom</td>
+                        <td>Dashboard intégré</td>
+                        <td>Moins de maintenance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentation</strong></td>
+                        <td>CasterDoc (manuel)</td>
+                        <td>Auto-générée</td>
+                        <td>Temps économisé</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 7: CASE STUDIES -->
+        <section id="cases">
+            <h2 class="section-title">📚 Références Clients</h2>
+
+            <div class="case-study">
+                <h4>🎬 TF1+ (Média - France)</h4>
+                <p>Plateforme de streaming du groupe TF1 avec équipe data de 30 personnes.</p>
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="value">25%</div>
+                        <span>Gain de temps Data Engineers</span>
+                    </div>
+                    <div class="metric-item">
+                        <div class="value">99%</div>
+                        <span>Réduction erreurs qualité (268→4/an)</span>
+                    </div>
+                </div>
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="value">3 sem → 1 sem</div>
+                        <span>Réduction temps d'onboarding</span>
+                    </div>
+                    <div class="metric-item">
+                        <div class="value">~30%</div>
+                        <span>Gain de temps Data Analysts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h4>💳 Peplug (Paiements - France)</h4>
+                <p>Client PCI DSS utilisant dbt Platform avec Tableau.</p>
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="value">PCI DSS</div>
+                        <span>Conformité validée</span>
+                    </div>
+                    <div class="metric-item">
+                        <div class="value">Tableau</div>
+                        <span>Intégration BI réussie</span>
+                    </div>
+                </div>
+                <p style="margin-top: 15px;"><strong>Pertinence Xpollens:</strong> Même secteur paiement, même type d'exigences sécurité.</p>
+            </div>
+
+            <div class="case-study">
+                <h4>📦 La Poste (Logistique - France)</h4>
+                <p>En cours d'évaluation de dbt Platform.</p>
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="value">En POC</div>
+                        <span>Statut actuel</span>
+                    </div>
+                    <div class="metric-item">
+                        <div class="value">Intégration Teams</div>
+                        <span>En demande (private preview)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Support dbt Labs</h4>
+                <p>
+                    <strong>Accès Support:</strong> Disponible pendant le POC via la plateforme<br>
+                    <strong>Langue:</strong> Anglais (French speaker en cours d'arrivée - février)<br>
+                    <strong>Scope:</strong> Support technique, troubleshooting, analyse des logs<br>
+                    <strong>Facilitation:</strong> Charlotte peut accélérer les réponses si nécessaire
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 8: ROADMAP -->
+        <section id="roadmap">
+            <h2 class="section-title">🗺️ Roadmap d'Implémentation</h2>
+
+            <h3 class="subsection-title">Phase 0: Setup & Configuration (2-3 semaines)</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Semaine -2/-1: Prérequis</h4>
+                        <p><strong>Objectifs:</strong> Connexions infrastructure et accès</p>
+                        <ul>
+                            <li>Connexion Azure DevOps à dbt Platform</li>
+                            <li>Connexion Synapse Analytics</li>
+                            <li>Configuration environnement dev/sandbox</li>
+                            <li>Création des accès utilisateurs (Morgane, Jean, Sofiane, Nadja, Emma)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Phase 1: POC (4 semaines)</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Semaine 1: Environnement & Premiers Tests</h4>
+                        <p><strong>Objectifs:</strong> Valider la matérialisation de tables Delta</p>
+                        <ul>
+                            <li>Test création tables Delta via dbt</li>
+                            <li>Import éventuel des tests dbt Core existants</li>
+                            <li>Premier pipeline end-to-end</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Semaine 2: Tests & Documentation</h4>
+                        <p><strong>Objectifs:</strong> Valider les tests de qualité et la documentation</p>
+                        <ul>
+                            <li>Mise en place de tests sur modèles POC</li>
+                            <li>Test du dashboard de résultats intégré</li>
+                            <li>Documentation auto-générée via Copilot</li>
+                            <li>Test Health Check Power BI (optionnel)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Semaine 3: Autonomie Data Analysts</h4>
+                        <p><strong>Objectifs:</strong> Tester l'expérience utilisateur analysts</p>
+                        <ul>
+                            <li>Onboarding Emma sur dbt Platform (IDE + Canvas)</li>
+                            <li>Création de 3 modèles par les data analysts</li>
+                            <li>Workflow complet: création → PR → review → merge</li>
+                            <li>Activation dbt Fusion pour benchmarks performance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Semaine 4: Bilan & Décision</h4>
+                        <p><strong>Objectifs:</strong> Compiler les résultats et décider</p>
+                        <ul>
+                            <li>Mesure des KPIs définis</li>
+                            <li>Feedback utilisateurs (Emma, Morgane)</li>
+                            <li>Compilation du business case</li>
+                            <li>Décision Go/No-Go</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Phase 2: Déploiement (si Go)</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Mois 1-2: Onboarding & Migration</h4>
+                        <p><strong>Objectifs:</strong> Formation équipe et migration progressive</p>
+                        <ul>
+                            <li>4 workshops d'onboarding (Customer Success)</li>
+                            <li>Migration des tests dbt Core existants</li>
+                            <li>Définition des conventions et best practices</li>
+                            <li>Mise en place des jobs de production</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Mois 3-6: Scaling</h4>
+                        <p><strong>Objectifs:</strong> Adoption complète et optimisation</p>
+                        <ul>
+                            <li>Autonomie complète des data analysts</li>
+                            <li>Implémentation Semantic Layer (si Enterprise)</li>
+                            <li>Optimisation des coûts Synapse</li>
+                            <li>Mesure des gains de productivité</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Prochaines Étapes</h4>
+                <ol style="margin-left: 20px; margin-top: 15px;">
+                    <li><strong>Semaine du 19 janvier:</strong> Point setup (connexion Azure DevOps + Synapse)</li>
+                    <li><strong>27 janvier:</strong> Revue des objectifs POC avec l'équipe</li>
+                    <li><strong>2 février:</strong> Kickoff POC</li>
+                    <li><strong>Fin février:</strong> Bilan et décision Go/No-Go</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- SECTION 9: POV TRACKING -->
+        <section id="pov-tracking">
+            <h2 class="section-title">📋 Suivi POC & Validation</h2>
+
+            <div class="highlight-box">
+                <h4>Objectifs du POC</h4>
+                <p>Ce POC vise à valider la capacité de dbt Platform à autonomiser les data analysts de Xpollens tout en maintenant la gouvernance des données. Les critères de succès définis permettront de construire le business case pour l'adoption.</p>
+            </div>
+
+            <!-- POV Summary Dashboard -->
+            <h3 class="subsection-title">Vue d'Ensemble</h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 30px 0;">
+                <div class="pov-summary-card">
+                    <div class="count" id="tech-validated-count">0/6</div>
+                    <div class="label">Validations Techniques</div>
+                    <div class="pov-progress-bar">
+                        <div class="pov-progress-fill" id="tech-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="pov-summary-card">
+                    <div class="count" id="business-validated-count">0/4</div>
+                    <div class="label">Validations Métier</div>
+                    <div class="pov-progress-bar">
+                        <div class="pov-progress-fill" id="business-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="pov-summary-card">
+                    <div class="count">2 Fév 2025</div>
+                    <div class="label">Date Kickoff POC</div>
+                </div>
+                <div class="pov-summary-card">
+                    <div class="count">28 Fév 2025</div>
+                    <div class="label">Date Cible Fin POC</div>
+                </div>
+            </div>
+
+            <!-- Stakeholders Section -->
+            <h3 class="subsection-title">Équipe POC</h3>
+            <table class="pov-tracking-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Rôle</th>
+                        <th style="width: 25%;">Nom</th>
+                        <th style="width: 25%;">Responsabilité POC</th>
+                        <th style="width: 25%;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>🔧 Data Lead</strong></td>
+                        <td>Morgane</td>
+                        <td>Sponsor, validation business, suivi timeline</td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>👨‍💻 Data Engineer</strong></td>
+                        <td>Jean</td>
+                        <td>Configuration technique, migration dbt Core, code review</td>
+                        <td><textarea class="notes-textarea" placeholder="En congé 2 semaines en janvier"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>👨‍💻 Data Engineer</strong></td>
+                        <td>Sofiane</td>
+                        <td>Support technique, setup Synapse</td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>🔐 Data / Sécurité</strong></td>
+                        <td>Nadja</td>
+                        <td>Validation sécurité, accès</td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>📊 Analytics Engineer</strong></td>
+                        <td>Emma Tidieu</td>
+                        <td>Test utilisateur principal (IDE + Canvas)</td>
+                        <td><textarea class="notes-textarea" placeholder="À former sur Jinja et templates"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>💼 Stakeholder</strong></td>
+                        <td>Olivier</td>
+                        <td>Validation budget</td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><strong>🧭 Solution Architect dbt</strong></td>
+                        <td>Charlotte</td>
+                        <td>Accompagnement POC, support</td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Technical Validation Section -->
+            <h3 class="subsection-title">Critères de Validation Technique</h3>
+            <div class="pov-section-header">
+                <div class="pov-section-icon technical">🔧</div>
+                <div>
+                    <strong>Validation Plateforme</strong>
+                    <p style="color: #666; font-size: 0.9em; margin: 0;">Valider les capacités techniques de dbt Platform sur votre infrastructure</p>
+                </div>
+            </div>
+
+            <table class="pov-tracking-table" id="technical-validation-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">✓</th>
+                        <th style="width: 25%;">Critère</th>
+                        <th style="width: 30%;">Description / Résultat Attendu</th>
+                        <th style="width: 15%;">Owner</th>
+                        <th style="width: 10%;">Statut</th>
+                        <th style="width: 15%;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
+                        <td><strong>Connexion Azure DevOps</strong></td>
+                        <td>Lien repo Azure DevOps au projet dbt Platform</td>
+                        <td><span class="owner-badge">Jean / Infra</span></td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Configs avec les équipes infra faites, repo et postes configurés. Push réalisés OK.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
+                        <td><strong>Connexion Synapse Analytics</strong></td>
+                        <td>Connexion dbt Platform à Synapse serverless</td>
+                        <td><span class="owner-badge">Jean / Sofiane</span></td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Connexion réussie à Synapse. Le blocage est sur la création des tables, pas la connexion.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><strong>Matérialisation Tables Delta</strong></td>
+                        <td>Créer des tables Delta sur Blob Storage via dbt</td>
+                        <td><span class="owner-badge">Jean</span></td>
+                        <td><span class="status-badge status-blocked">Bloqué</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Blocage sur création de tables dans le pool serverless. Ticket support ouvert (connexion Fabric et Synapse). Attente réponse support pour contourner le problème.
+Options explorées : confirmer faisabilité pool serverless, ou utiliser autre base, ou passer à pool dédié Synapse.
+Action : Charlotte follow-up avec Grace Seda.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><strong>Pipeline End-to-End</strong></td>
+                        <td>Workflow complet: source → transformation → test → Power BI</td>
+                        <td><span class="owner-badge">Jean / Emma</span></td>
+                        <td><span class="status-badge status-blocked">Bloqué</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Bloqué par le problème de matérialisation des tables Delta. En attente de résolution.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><strong>CI/CD avec SlimCI</strong></td>
+                        <td>Tests automatiques à chaque PR, rapport de comparaison</td>
+                        <td><span class="owner-badge">Jean</span></td>
+                        <td><span class="status-badge status-blocked">Bloqué</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Tests rapides effectués, mais ne peuvent pas être poussés plus loin tant que la matérialisation n'est pas résolue.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><strong>dbt Fusion Activation</strong></td>
+                        <td>Activer le nouveau moteur et mesurer les performances</td>
+                        <td><span class="owner-badge">Charlotte / Jean</span></td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Demande faite le 30/01, réponse attendue le 02/02. Charlotte vérifie l'activation.</textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Business Validation Section -->
+            <h3 class="subsection-title">Critères de Validation Métier</h3>
+            <div class="pov-section-header">
+                <div class="pov-section-icon business">📊</div>
+                <div>
+                    <strong>Objectifs Business</strong>
+                    <p style="color: #666; font-size: 0.9em; margin: 0;">Mesurer l'impact sur la productivité et l'autonomie des équipes</p>
+                </div>
+            </div>
+
+            <table class="pov-tracking-table" id="business-validation-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">✓</th>
+                        <th style="width: 20%;">KPI</th>
+                        <th style="width: 15%;">Baseline</th>
+                        <th style="width: 15%;">Target</th>
+                        <th style="width: 15%;">Mesuré</th>
+                        <th style="width: 10%;">Statut</th>
+                        <th style="width: 20%;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="business-checkbox"></div></td>
+                        <td><strong>Autonomie Livraison</strong><br><span style="color: #666; font-size: 0.85em;">Modèles créés par analysts</span></td>
+                        <td><input type="text" class="kpi-input" value="0 (aujourd'hui)"></td>
+                        <td><input type="text" class="kpi-input" value="3 modèles"></td>
+                        <td><input type="text" class="kpi-input" placeholder="À mesurer"></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Pour l'instant 1 data analyste (Emma). Demander à Morgane combien de personnes seraient concernées par dbt à terme, y compris les métiers pour consultation du lineage.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="business-checkbox"></div></td>
+                        <td><strong>Performance Création</strong><br><span style="color: #666; font-size: 0.85em;">Temps d'exécution dbt</span></td>
+                        <td><input type="text" class="kpi-input" placeholder="N/A"></td>
+                        <td><input type="text" class="kpi-input" placeholder="Acceptable en journée"></td>
+                        <td><input type="text" class="kpi-input" placeholder="À mesurer"></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea" placeholder="Dépend aussi de la qualité du code et du DW"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="business-checkbox"></div></td>
+                        <td><strong>Satisfaction Utilisateur</strong><br><span style="color: #666; font-size: 0.85em;">Feedback data analysts</span></td>
+                        <td><input type="text" class="kpi-input" placeholder="N/A"></td>
+                        <td><input type="text" class="kpi-input" placeholder="Positif"></td>
+                        <td><input type="text" class="kpi-input" placeholder="À mesurer"></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea" placeholder="Feedback Emma sur IDE + Canvas"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="business-checkbox"></div></td>
+                        <td><strong>Facilité Tests</strong><br><span style="color: #666; font-size: 0.85em;">Ajout de tests vs dbt Core</span></td>
+                        <td><input type="text" class="kpi-input" placeholder="YAML manuel"></td>
+                        <td><input type="text" class="kpi-input" placeholder="+ simple avec Copilot"></td>
+                        <td><input type="text" class="kpi-input" placeholder="À mesurer"></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- POV Timeline Section -->
+            <h3 class="subsection-title">Timeline POC</h3>
+            <div class="pov-section-header">
+                <div class="pov-section-icon timeline">📅</div>
+                <div>
+                    <strong>Points de Suivi Hebdomadaires</strong>
+                    <p style="color: #666; font-size: 0.9em; margin: 0;">Checkpoints réguliers pour suivre l'avancement</p>
+                </div>
+            </div>
+
+            <table class="pov-tracking-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">✓</th>
+                        <th style="width: 15%;">Phase</th>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 35%;">Objectif / Focus</th>
+                        <th style="width: 15%;">Statut</th>
+                        <th style="width: 15%;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" checked></div></td>
+                        <td><strong>Setup</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 19 Jan"></td>
+                        <td>Connexion Azure DevOps + Synapse, création utilisateurs</td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Connexions Azure DevOps et Synapse validées. Postes configurés.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" checked></div></td>
+                        <td><strong>Objectifs</strong></td>
+                        <td><input type="text" class="kpi-input" value="27 Jan"></td>
+                        <td>Revue des objectifs POC avec l'équipe</td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">Objectifs POC définis et validés avec Jean.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Kickoff</strong></td>
+                        <td><input type="text" class="kpi-input" value="2 Fév"></td>
+                        <td>Lancement officiel POC, premiers modèles</td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Point de suivi réalisé. Blocage sur matérialisation Delta à résoudre cette semaine.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Semaine 1</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 3 Fév"></td>
+                        <td>Test matérialisation Delta, premiers pipelines</td>
+                        <td><span class="status-badge status-blocked">Bloqué</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Focus sur résolution du blocage matérialisation cette semaine. Attente réponse support dbt.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Semaine 2</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 10 Fév"></td>
+                        <td>Tests qualité, documentation, dashboard intégré, Semantic Layer</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Équipe très intéressée par le modèle sémantique et l'intégration Power BI. Focus documentation et qualité.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Semaine 3</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 17 Fév"></td>
+                        <td>Autonomie analysts (Emma), dbt Fusion, Canvas</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Emma (Data Analyst) sera intégrée aux réunions du 16/02 et 23/02 pour tests d'autonomie et feedback utilisateur.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Semaine 4</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 24 Fév"></td>
+                        <td>Bilan, mesure KPIs, business case, décision Go/No-Go</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Technical Environment Setup -->
+            <h3 class="subsection-title">Environnement Technique POC</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>☁️ Data Warehouse</h3>
+                    <p><strong>Plateforme:</strong> Azure Synapse Analytics (serverless)</p>
+                    <p><strong>Stockage:</strong> Azure Blob Storage (Delta Tables)</p>
+                    <p><strong>Environnement:</strong> Sandbox dédié au POC</p>
+                    <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
+                </div>
+                <div class="card">
+                    <h3>📂 Git Repository</h3>
+                    <p><strong>Plateforme:</strong> Azure DevOps</p>
+                    <p><strong>Type:</strong> Cloud</p>
+                    <p><strong>Repo POC:</strong> Configuré</p>
+                    <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
+                </div>
+                <div class="card">
+                    <h3>🔐 Accès & Sécurité</h3>
+                    <p><strong>Auth:</strong> Active Directory</p>
+                    <p><strong>Utilisateurs:</strong> Postes configurés</p>
+                    <p><strong>Sécurité:</strong> Validation Nadja en cours</p>
+                    <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
+                </div>
+            </div>
+
+            <!-- Points Bloquants -->
+            <h3 class="subsection-title">Points d'Attention & Bloquants</h3>
+            <div class="issue-box critical">
+                <strong>🔴 Point Bloquant Principal:</strong> Matérialisation Tables Delta<br><br>
+                <strong>Situation (02/02):</strong> Impossible de créer des tables dans le pool serverless. Ticket support ouvert avec logs détaillés.<br>
+                <strong>Tests effectués:</strong> Connexion Fabric ❌ | Connexion Synapse ❌ | Connexion Spark ❌<br>
+                <strong>Options envisagées:</strong><br>
+                • Option 1: Confirmer faisabilité sur pool serverless (en attente support)<br>
+                • Option 2: Utiliser une autre base de données pour les modèles<br>
+                • Option 3: Passer du pool serverless à un pool dédié Synapse<br>
+                <strong>Action:</strong> Charlotte fait le follow-up avec Grace Seda (support dbt). Objectif: résoudre cette semaine.
+            </div>
+
+            <div class="issue-box">
+                <strong>⚠️ Clarifications Low-Code (Canvas)</strong><br><br>
+                <strong>Constat (02/02):</strong> L'équipe pensait que les tests pouvaient être gérés via l'interface graphique Canvas.<br>
+                <strong>Réalité:</strong> Canvas = création de modèles SQL (low-code). Les tests restent en fichiers YAML via IDE/VS Code.<br>
+                <strong>Aide disponible:</strong> Copilot peut générer automatiquement les tests génériques et mettre à jour les fichiers YAML.
+            </div>
+
+            <div class="issue-box">
+                <strong>⚠️ À Valider:</strong> Choix du Tier (Team vs Enterprise)<br><br>
+                <strong>Impact:</strong> Canvas, Copilot et Semantic Layer uniquement disponibles en Enterprise.<br>
+                <strong>Action:</strong> Clarifier avec Nadja le retour sécurité et les contraintes budgétaires.
+            </div>
+
+            <div class="issue-box" style="background: linear-gradient(135deg, #e8f5e9 0%, #fff 100%); border-left: 4px solid #4caf50;">
+                <strong>✅ Prochaines étapes confirmées (02/02)</strong><br><br>
+                <strong>Cette semaine:</strong> Résoudre le blocage matérialisation Delta<br>
+                <strong>Semaine 2:</strong> Focus qualité, documentation, Semantic Layer, intégration Power BI<br>
+                <strong>Semaines 3-4:</strong> Intégration Emma Tidieu aux réunions pour tests d'autonomie analyst<br>
+                <strong>Comparatif demandé:</strong> Ajouter comparaison dbt Core vs dbt Platform (évolutions futures)
+            </div>
+
+            <!-- Decision Summary -->
+            <h3 class="subsection-title">Décision Finale</h3>
+            <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin: 30px 0;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px;">📝 Observations Globales</h4>
+                        <textarea class="notes-textarea" style="min-height: 150px;" placeholder="Synthèse des observations du POC..."></textarea>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 15px;">💡 Rationale de la Décision</h4>
+                        <textarea class="notes-textarea" style="min-height: 150px;" placeholder="Justification de la décision Go/No-Go..."></textarea>
+                    </div>
+                </div>
+                <div style="margin-top: 30px; display: flex; align-items: center; gap: 20px;">
+                    <strong>Décision POC:</strong>
+                    <select style="padding: 10px 20px; border: 2px solid #fd6603; border-radius: 6px; font-size: 1em; cursor: pointer;">
+                        <option value="">-- En attente --</option>
+                        <option value="go">✅ GO - Procéder à l'adoption</option>
+                        <option value="conditional">⚠️ GO Conditionnel - Avec réserves</option>
+                        <option value="extend">🔄 Étendre le POC</option>
+                        <option value="nogo">❌ NO GO - Ne pas procéder</option>
+                    </select>
+                    <span style="color: #666;">Date de décision: <span class="editable-field" contenteditable="true" data-placeholder="[Date]" style="display: inline-block; min-width: 100px;"></span></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Save/Load Toolbar -->
+    <div class="save-toolbar">
+        <button class="load-btn" onclick="document.getElementById('load-file-input').click()">
+            📂 Charger
+        </button>
+        <input type="file" id="load-file-input" class="hidden-input" accept=".json" onchange="loadData(event)">
+        <button class="save-btn" onclick="exportData()">
+            💾 Sauvegarder
+        </button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ==================== NAVIGATION ====================
+        function showSection(event, sectionId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav link
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==================== SAVE/EXPORT DATA ====================
+        function exportData() {
+            const data = {
+                exportDate: new Date().toISOString(),
+                customerName: 'Xpollens',
+                technicalValidation: [],
+                businessValidation: [],
+                timeline: [],
+                notes: {},
+                decision: {}
+            };
+
+            // Collect technical validation data
+            document.querySelectorAll('#technical-validation-table tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 6) {
+                    data.technicalValidation.push({
+                        checked: cells[0].querySelector('input[type="checkbox"]')?.checked || false,
+                        criteria: cells[1].textContent.trim(),
+                        owner: cells[3].querySelector('.owner-badge')?.textContent || '',
+                        status: cells[4].querySelector('.status-badge')?.textContent || 'Pending',
+                        notes: cells[5].querySelector('textarea')?.value || ''
+                    });
+                }
+            });
+
+            // Collect business validation data
+            document.querySelectorAll('#business-validation-table tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 7) {
+                    const inputs = cells[2].querySelectorAll('input, textarea');
+                    data.businessValidation.push({
+                        checked: cells[0].querySelector('input[type="checkbox"]')?.checked || false,
+                        kpi: cells[1].textContent.trim(),
+                        baseline: cells[2].querySelector('input')?.value || '',
+                        target: cells[3].querySelector('input')?.value || '',
+                        measured: cells[4].querySelector('input')?.value || '',
+                        status: cells[5].querySelector('.status-badge')?.textContent || 'Pending',
+                        notes: cells[6].querySelector('textarea')?.value || ''
+                    });
+                }
+            });
+
+            // Export as JSON file
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `xpollens_poc_tracking_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Données exportées avec succès!', 'success');
+        }
+
+        // ==================== LOAD DATA ====================
+        function loadData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Load technical validation
+                    if (data.technicalValidation) {
+                        const rows = document.querySelectorAll('#technical-validation-table tbody tr');
+                        data.technicalValidation.forEach((item, index) => {
+                            if (rows[index]) {
+                                const cells = rows[index].querySelectorAll('td');
+                                if (cells.length >= 6) {
+                                    const checkbox = cells[0].querySelector('input[type="checkbox"]');
+                                    const statusBadge = cells[4].querySelector('.status-badge');
+                                    const notesField = cells[5].querySelector('textarea');
+                                    
+                                    if (checkbox) checkbox.checked = item.checked || false;
+                                    if (statusBadge) {
+                                        statusBadge.textContent = item.status || 'Pending';
+                                        updateStatusBadgeClass(statusBadge, item.status);
+                                    }
+                                    if (notesField) notesField.value = item.notes || '';
+                                }
+                            }
+                        });
+                    }
+
+                    // Load business validation
+                    if (data.businessValidation) {
+                        const rows = document.querySelectorAll('#business-validation-table tbody tr');
+                        data.businessValidation.forEach((item, index) => {
+                            if (rows[index]) {
+                                const cells = rows[index].querySelectorAll('td');
+                                if (cells.length >= 7) {
+                                    const checkbox = cells[0].querySelector('input[type="checkbox"]');
+                                    const baselineInput = cells[2].querySelector('input');
+                                    const targetInput = cells[3].querySelector('input');
+                                    const measuredInput = cells[4].querySelector('input');
+                                    const statusBadge = cells[5].querySelector('.status-badge');
+                                    const notesField = cells[6].querySelector('textarea');
+                                    
+                                    if (checkbox) checkbox.checked = item.checked || false;
+                                    if (baselineInput) baselineInput.value = item.baseline || '';
+                                    if (targetInput) targetInput.value = item.target || '';
+                                    if (measuredInput) measuredInput.value = item.measured || '';
+                                    if (statusBadge) {
+                                        statusBadge.textContent = item.status || 'Pending';
+                                        updateStatusBadgeClass(statusBadge, item.status);
+                                    }
+                                    if (notesField) notesField.value = item.notes || '';
+                                }
+                            }
+                        });
+                    }
+
+                    updateProgressCounters();
+                    showToast('Données chargées avec succès!', 'success');
+                } catch (error) {
+                    showToast('Erreur lors du chargement du fichier', 'error');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function updateStatusBadgeClass(badge, status) {
+            badge.classList.remove('status-pending', 'status-in-progress', 'status-validated', 'status-blocked');
+            
+            const statusLower = (status || '').toLowerCase();
+            if (statusLower.includes('validated') || statusLower.includes('validé') || statusLower.includes('complete')) {
+                badge.classList.add('status-validated');
+            } else if (statusLower.includes('progress') || statusLower.includes('cours')) {
+                badge.classList.add('status-in-progress');
+            } else if (statusLower.includes('blocked') || statusLower.includes('bloqué')) {
+                badge.classList.add('status-blocked');
+            } else {
+                badge.classList.add('status-pending');
+            }
+        }
+
+        // ==================== PROGRESS TRACKING ====================
+        function updateProgressCounters() {
+            // Technical validation progress
+            const techCheckboxes = document.querySelectorAll('.tech-checkbox');
+            const techChecked = Array.from(techCheckboxes).filter(cb => cb.checked).length;
+            document.getElementById('tech-validated-count').textContent = `${techChecked}/${techCheckboxes.length}`;
+            document.getElementById('tech-progress').style.width = `${(techChecked / techCheckboxes.length) * 100}%`;
+
+            // Business validation progress
+            const businessCheckboxes = document.querySelectorAll('.business-checkbox');
+            const businessChecked = Array.from(businessCheckboxes).filter(cb => cb.checked).length;
+            document.getElementById('business-validated-count').textContent = `${businessChecked}/${businessCheckboxes.length}`;
+            document.getElementById('business-progress').style.width = `${(businessChecked / businessCheckboxes.length) * 100}%`;
+        }
+
+        // ==================== STATUS BADGE EDITING ====================
+        document.querySelectorAll('.status-badge').forEach(badge => {
+            badge.style.cursor = 'pointer';
+            badge.title = 'Cliquez pour changer le statut';
+            
+            badge.addEventListener('click', function() {
+                const statuses = ['Pending', 'En cours', 'Validé', 'Bloqué'];
+                const currentText = this.textContent.trim();
+                let currentIndex = statuses.findIndex(s => currentText.includes(s) || 
+                    (s === 'Pending' && currentText.includes('Pending')) ||
+                    (s === 'En cours' && currentText.includes('progress')) ||
+                    (s === 'Validé' && currentText.includes('Validated')) ||
+                    (s === 'Bloqué' && currentText.includes('Blocked')));
+                currentIndex = (currentIndex + 1) % statuses.length;
+                
+                this.textContent = statuses[currentIndex];
+                updateStatusBadgeClass(this, statuses[currentIndex]);
+            });
+        });
+
+        // ==================== CHECKBOX LISTENERS ====================
+        document.querySelectorAll('.tech-checkbox, .business-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgressCounters);
+        });
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize progress counters
+            updateProgressCounters();
+        });
+
+        // ==================== KEYBOARD SHORTCUTS ====================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S to save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                exportData();
+            }
+            
+            // Ctrl+O to open
+            if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+                e.preventDefault();
+                document.getElementById('load-file-input').click();
+            }
+        });
+    </script>
+</body>
+</html>
