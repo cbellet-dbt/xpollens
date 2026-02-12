@@ -725,7 +725,7 @@
         <div class="meta">
             <span>📊 POC dbt Cloud</span>
             <span>🔧 dbt Labs</span>
-            <span>📅 Mis à jour: 02 Février 2026</span>
+            <span>📅 Mis à jour: 12 Février 2026</span>
         </div>
     </header>
 
@@ -1893,38 +1893,40 @@
                         <td><textarea class="notes-textarea">02/02 : Connexion réussie à Synapse. Le blocage est sur la création des tables, pas la connexion.</textarea></td>
                     </tr>
                     <tr>
-                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
                         <td><strong>Matérialisation Tables Delta</strong></td>
                         <td>Créer des tables Delta sur Blob Storage via dbt</td>
                         <td><span class="owner-badge">Jean</span></td>
-                        <td><span class="status-badge status-blocked">Bloqué</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Blocage sur création de tables dans le pool serverless. Ticket support ouvert (connexion Fabric et Synapse). Attente réponse support pour contourner le problème.
-Options explorées : confirmer faisabilité pool serverless, ou utiliser autre base, ou passer à pool dédié Synapse.
-Action : Charlotte follow-up avec Grace Seda.</textarea></td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Blocage sur création de tables dans le pool serverless. Ticket support ouvert.
+12/02 : ✅ RÉSOLU - Passage sur pool dédié Synapse. Tests OK, création de tables et modèles fonctionnels. Droits configurés correctement.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
                         <td><strong>Pipeline End-to-End</strong></td>
                         <td>Workflow complet: source → transformation → test → Power BI</td>
                         <td><span class="owner-badge">Jean / Emma</span></td>
-                        <td><span class="status-badge status-blocked">Bloqué</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Bloqué par le problème de matérialisation des tables Delta. En attente de résolution.</textarea></td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Bloqué par le problème de matérialisation.
+12/02 : Tests via commandes dbt OK. Création de tables fonctionnelle. Prochaine étape : création de pipelines/jobs avec orchestration. Pas encore passé par les pipelines.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
                         <td><strong>CI/CD avec SlimCI</strong></td>
                         <td>Tests automatiques à chaque PR, rapport de comparaison</td>
                         <td><span class="owner-badge">Jean</span></td>
-                        <td><span class="status-badge status-blocked">Bloqué</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Tests rapides effectués, mais ne peuvent pas être poussés plus loin tant que la matérialisation n'est pas résolue.</textarea></td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Tests rapides effectués.
+12/02 : À tester semaine du 16/02. Sofiane très intéressé par la CI/CD automatique (pas de config GitHub/Azure DevOps nécessaire). Démo faite par Charlotte : commit → PR → tests auto → dbt compare.</textarea></td>
                     </tr>
                     <tr>
-                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
                         <td><strong>dbt Fusion Activation</strong></td>
                         <td>Activer le nouveau moteur et mesurer les performances</td>
                         <td><span class="owner-badge">Charlotte / Jean</span></td>
-                        <td><span class="status-badge status-in-progress">En cours</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Demande faite le 30/01, réponse attendue le 02/02. Charlotte vérifie l'activation.</textarea></td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">02/02 : Demande faite le 30/01.
+12/02 : ✅ Activation OK, visible dans l'espace. À tester : migration d'un projet Core vers Fusion pour comparer l'effort avec/sans plateforme.</textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -2038,36 +2040,52 @@ Action : Charlotte follow-up avec Grace Seda.</textarea></td>
                         <td><textarea class="notes-textarea">02/02 : Point de suivi réalisé. Blocage sur matérialisation Delta à résoudre cette semaine.</textarea></td>
                     </tr>
                     <tr>
-                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" checked></div></td>
                         <td><strong>Semaine 1</strong></td>
                         <td><input type="text" class="kpi-input" value="Sem. 3 Fév"></td>
                         <td>Test matérialisation Delta, premiers pipelines</td>
-                        <td><span class="status-badge status-blocked">Bloqué</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Focus sur résolution du blocage matérialisation cette semaine. Attente réponse support dbt.</textarea></td>
+                        <td><span class="status-badge status-validated">Validé</span></td>
+                        <td><textarea class="notes-textarea">12/02 : ✅ Pool dédié Synapse configuré. Création de tables et modèles OK. Tests via commandes dbt réussis.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
                         <td><strong>Semaine 2</strong></td>
                         <td><input type="text" class="kpi-input" value="Sem. 10 Fév"></td>
-                        <td>Tests qualité, documentation, dashboard intégré, Semantic Layer</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Équipe très intéressée par le modèle sémantique et l'intégration Power BI. Focus documentation et qualité.</textarea></td>
+                        <td>Tests qualité, documentation, CI/CD, dbt compare</td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">12/02 : Focus CI/CD cette semaine. Test commit → PR → tests auto → dbt compare. Jean reprend le sujet lundi 17/02.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
                         <td><strong>Semaine 3</strong></td>
                         <td><input type="text" class="kpi-input" value="Sem. 17 Fév"></td>
-                        <td>Autonomie analysts (Emma), dbt Fusion, Canvas</td>
+                        <td>Préparation workshop Data Analysts, CI/CD Data Engineers</td>
                         <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Emma (Data Analyst) sera intégrée aux réunions du 16/02 et 23/02 pour tests d'autonomie et feedback utilisateur.</textarea></td>
+                        <td><textarea class="notes-textarea">12/02 : Préparation du workshop en présentiel. Sélectionner un projet Power BI pour ramener les transfos dans dbt. Vérifier comptes Azure DevOps. Créer projet Fusion.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
                         <td><strong>Semaine 4</strong></td>
                         <td><input type="text" class="kpi-input" value="Sem. 24 Fév"></td>
-                        <td>Bilan, mesure KPIs, business case, décision Go/No-Go</td>
+                        <td>Tests Data Analysts, bilan partiel</td>
                         <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea" placeholder="Notes..."></textarea></td>
+                        <td><textarea class="notes-textarea">12/02 : Équipe dbt en déplacement US (événement entreprise). Workshop reporté si présentiel souhaité.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Workshop</strong></td>
+                        <td><input type="text" class="kpi-input" value="Sem. 2 ou 9 Mars"></td>
+                        <td>Workshop Data Analysts en présentiel (2h)</td>
+                        <td><span class="status-badge status-pending">Planifié</span></td>
+                        <td><textarea class="notes-textarea">12/02 : Options : distance sem. 2 mars OU présentiel sem. 9 mars (préférence équipe). Charlotte + Olivier se déplacent chez Xpollens.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><strong>Bilan Final</strong></td>
+                        <td><input type="text" class="kpi-input" value="Mi-Mars"></td>
+                        <td>Mesure KPIs, business case, décision Go/No-Go</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><textarea class="notes-textarea">12/02 : Après workshop. Inclura comparaison TCO dbt Core vs Platform (questionnaire Olivier).</textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -2077,38 +2095,41 @@ Action : Charlotte follow-up avec Grace Seda.</textarea></td>
             <div class="card-grid">
                 <div class="card">
                     <h3>☁️ Data Warehouse</h3>
-                    <p><strong>Plateforme:</strong> Azure Synapse Analytics (serverless)</p>
+                    <p><strong>Plateforme:</strong> Azure Synapse Analytics</p>
+                    <p><strong>Type:</strong> Pool dédié (migration depuis serverless)</p>
                     <p><strong>Stockage:</strong> Azure Blob Storage (Delta Tables)</p>
-                    <p><strong>Environnement:</strong> Sandbox dédié au POC</p>
                     <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
                 </div>
                 <div class="card">
                     <h3>📂 Git Repository</h3>
                     <p><strong>Plateforme:</strong> Azure DevOps</p>
                     <p><strong>Type:</strong> Cloud</p>
-                    <p><strong>Repo POC:</strong> Configuré</p>
+                    <p><strong>Repo POC:</strong> Configuré, push OK</p>
                     <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
                 </div>
                 <div class="card">
                     <h3>🔐 Accès & Sécurité</h3>
                     <p><strong>Auth:</strong> Active Directory</p>
-                    <p><strong>Utilisateurs:</strong> Postes configurés</p>
-                    <p><strong>Sécurité:</strong> Validation Nadja en cours</p>
+                    <p><strong>Utilisateurs:</strong> Droits configurés</p>
+                    <p><strong>Tier POC:</strong> Enterprise</p>
                     <p><strong>Connexion:</strong> <span class="status-badge status-validated">Validé</span></p>
                 </div>
             </div>
 
             <!-- Points Bloquants -->
             <h3 class="subsection-title">Points d'Attention & Bloquants</h3>
-            <div class="issue-box critical">
-                <strong>🔴 Point Bloquant Principal:</strong> Matérialisation Tables Delta<br><br>
-                <strong>Situation (02/02):</strong> Impossible de créer des tables dans le pool serverless. Ticket support ouvert avec logs détaillés.<br>
-                <strong>Tests effectués:</strong> Connexion Fabric ❌ | Connexion Synapse ❌ | Connexion Spark ❌<br>
-                <strong>Options envisagées:</strong><br>
-                • Option 1: Confirmer faisabilité sur pool serverless (en attente support)<br>
-                • Option 2: Utiliser une autre base de données pour les modèles<br>
-                • Option 3: Passer du pool serverless à un pool dédié Synapse<br>
-                <strong>Action:</strong> Charlotte fait le follow-up avec Grace Seda (support dbt). Objectif: résoudre cette semaine.
+            
+            <div class="issue-box" style="background: linear-gradient(135deg, #e8f5e9 0%, #fff 100%); border-left: 4px solid #4caf50;">
+                <strong>✅ Résolu (12/02):</strong> Matérialisation Tables Delta<br><br>
+                <strong>Solution:</strong> Passage sur pool dédié Synapse (au lieu de serverless).<br>
+                <strong>Résultat:</strong> Création de tables et modèles fonctionnels. Tests OK. Droits configurés.
+            </div>
+
+            <div class="issue-box">
+                <strong>⚠️ Point d'attention:</strong> Migration dbt Core → Fusion<br><br>
+                <strong>Contexte (12/02):</strong> Olivier a souligné que dbt Labs investit principalement dans Fusion (rachat SDF ~200M$). dbt Core reste maintenu mais avec moins d'évolutions futures.<br>
+                <strong>Recommandation:</strong> Intégrer la migration Core → Fusion dans la roadmap, même sans dbt Platform.<br>
+                <strong>Avantage Platform:</strong> Analyse des logs et suggestions de migration automatiques (non disponible en self-hosted).
             </div>
 
             <div class="issue-box">
@@ -2120,16 +2141,26 @@ Action : Charlotte follow-up avec Grace Seda.</textarea></td>
 
             <div class="issue-box">
                 <strong>⚠️ À Valider:</strong> Choix du Tier (Team vs Enterprise)<br><br>
-                <strong>Impact:</strong> Canvas, Copilot et Semantic Layer uniquement disponibles en Enterprise.<br>
-                <strong>Action:</strong> Clarifier avec Nadja le retour sécurité et les contraintes budgétaires.
+                <strong>Note (12/02):</strong> Le POC est sur la version Enterprise avec Canvas, Copilot, etc.<br>
+                <strong>Action:</strong> Morgane doit confirmer le nombre de licences développeur (Data Engineers + Data Analysts).
             </div>
 
-            <div class="issue-box" style="background: linear-gradient(135deg, #e8f5e9 0%, #fff 100%); border-left: 4px solid #4caf50;">
-                <strong>✅ Prochaines étapes confirmées (02/02)</strong><br><br>
-                <strong>Cette semaine:</strong> Résoudre le blocage matérialisation Delta<br>
-                <strong>Semaine 2:</strong> Focus qualité, documentation, Semantic Layer, intégration Power BI<br>
-                <strong>Semaines 3-4:</strong> Intégration Emma Tidieu aux réunions pour tests d'autonomie analyst<br>
-                <strong>Comparatif demandé:</strong> Ajouter comparaison dbt Core vs dbt Platform (évolutions futures)
+            <div class="issue-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%); border-left: 4px solid #1976d2;">
+                <strong>📋 Prochaines étapes (12/02)</strong><br><br>
+                <strong>Data Engineers (Sofiane, Jean, Nadja):</strong><br>
+                • Tester CI/CD automatique (commit → PR → tests → dbt compare)<br>
+                • Comparer migration Core → Fusion avec/sans plateforme<br>
+                • Jean reprend le sujet lundi 17/02<br><br>
+                <strong>Data Analysts (Emma + équipe):</strong><br>
+                • Workshop présentiel prévu semaine du 9 mars (ou distance sem. 2 mars)<br>
+                • Objectif : recréer une logique Power BI existante dans dbt Platform<br>
+                • Connexion projet dbt → Power BI à tester<br><br>
+                <strong>Charlotte:</strong><br>
+                • Envoyer doc connexion Power BI<br>
+                • Préparer agenda workshop<br>
+                • Routine de suivi : jeudi 10h30-11h<br><br>
+                <strong>Olivier:</strong><br>
+                • Envoyer questionnaire TCO pour calculateur ROI
             </div>
 
             <!-- Decision Summary -->
