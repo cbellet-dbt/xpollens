@@ -725,7 +725,7 @@
         <div class="meta">
             <span>📊 POC dbt Cloud</span>
             <span>🔧 dbt Labs</span>
-            <span>📅 Mis à jour: 12 Février 2026</span>
+            <span>📅 Mis à jour: 19 Février 2026</span>
         </div>
     </header>
 
@@ -1890,7 +1890,8 @@
                         <td>Connexion dbt Platform à Synapse serverless</td>
                         <td><span class="owner-badge">Jean / Sofiane</span></td>
                         <td><span class="status-badge status-validated">Validé</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Connexion réussie à Synapse. Le blocage est sur la création des tables, pas la connexion.</textarea></td>
+                        <td><textarea class="notes-textarea">02/02 : Connexion réussie à Synapse. Le blocage est sur la création des tables, pas la connexion.
+19/02 : Sofiane a créé le pool SQL dédié. Problème de lecture des tables Delta par le pool dédié (sujet Microsoft en cours).</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
@@ -1899,7 +1900,8 @@
                         <td><span class="owner-badge">Jean</span></td>
                         <td><span class="status-badge status-validated">Validé</span></td>
                         <td><textarea class="notes-textarea">02/02 : Blocage sur création de tables dans le pool serverless. Ticket support ouvert.
-12/02 : ✅ RÉSOLU - Passage sur pool dédié Synapse. Tests OK, création de tables et modèles fonctionnels. Droits configurés correctement.</textarea></td>
+12/02 : ✅ RÉSOLU - Passage sur pool dédié Synapse. Tests OK, création de tables et modèles fonctionnels. Droits configurés correctement.
+19/02 : Confirmé validé. Matérialisation des tables Delta fonctionnelle.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
@@ -1908,7 +1910,8 @@
                         <td><span class="owner-badge">Jean / Emma</span></td>
                         <td><span class="status-badge status-in-progress">En cours</span></td>
                         <td><textarea class="notes-textarea">02/02 : Bloqué par le problème de matérialisation.
-12/02 : Tests via commandes dbt OK. Création de tables fonctionnelle. Prochaine étape : création de pipelines/jobs avec orchestration. Pas encore passé par les pipelines.</textarea></td>
+12/02 : Tests via commandes dbt OK. Création de tables fonctionnelle.
+19/02 : Jean a créé des modèles avec les différentes layers (recommandations dbt). Un job orchestré sur dbt Cloud (sans tests pour l'instant). Prochaine étape : tester pipeline complet incluant exposition sur Power BI. Charlotte recherche recommandations SA pour connexion Power BI.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox"></div></td>
@@ -1917,7 +1920,8 @@
                         <td><span class="owner-badge">Jean</span></td>
                         <td><span class="status-badge status-in-progress">En cours</span></td>
                         <td><textarea class="notes-textarea">02/02 : Tests rapides effectués.
-12/02 : À tester semaine du 16/02. Sofiane très intéressé par la CI/CD automatique (pas de config GitHub/Azure DevOps nécessaire). Démo faite par Charlotte : commit → PR → tests auto → dbt compare.</textarea></td>
+12/02 : À tester semaine du 16/02. Sofiane très intéressé par la CI/CD automatique.
+19/02 : Tests qualité, documentation et CI/CD à compléter semaines à venir. dbt Compare à tester (rapport comparaison auto entre données prod et nouvelles données avant merge). Jobs CI déclenchés automatiquement sur PR avec logs et artefacts.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="tech-checkbox" checked></div></td>
@@ -1926,7 +1930,8 @@
                         <td><span class="owner-badge">Charlotte / Jean</span></td>
                         <td><span class="status-badge status-validated">Validé</span></td>
                         <td><textarea class="notes-textarea">02/02 : Demande faite le 30/01.
-12/02 : ✅ Activation OK, visible dans l'espace. À tester : migration d'un projet Core vers Fusion pour comparer l'effort avec/sans plateforme.</textarea></td>
+12/02 : ✅ Activation OK, visible dans l'espace. À tester : migration d'un projet Core vers Fusion.
+19/02 : ⚠️ Le connecteur Synapse ne supporte pas la stratégie d'incrémentation en merge → utilisation de delete-insert. Le connecteur n'apparaît pas dans la doc des stratégies supportées.</textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -1961,7 +1966,8 @@
                         <td><input type="text" class="kpi-input" value="3 modèles"></td>
                         <td><input type="text" class="kpi-input" placeholder="À mesurer"></td>
                         <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">02/02 : Pour l'instant 1 data analyste (Emma). Demander à Morgane combien de personnes seraient concernées par dbt à terme, y compris les métiers pour consultation du lineage.</textarea></td>
+                        <td><textarea class="notes-textarea">02/02 : Pour l'instant 1 data analyste (Emma). Demander à Morgane combien de personnes seraient concernées par dbt à terme.
+19/02 : Jean s'est formé pendant ses vacances et a créé un premier modèle, montré un deuxième à Morgane. Morgane va tester la création de modèles de manière autonome semaine prochaine. Workshop avec Emma prévu semaine du 16 mars (modèles orientés charges). L'ouverture aux business users non-SQL hors scope actuel.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox" class="business-checkbox"></div></td>
@@ -2053,15 +2059,17 @@
                         <td><input type="text" class="kpi-input" value="Sem. 10 Fév"></td>
                         <td>Tests qualité, documentation, CI/CD, dbt compare</td>
                         <td><span class="status-badge status-in-progress">En cours</span></td>
-                        <td><textarea class="notes-textarea">12/02 : Focus CI/CD cette semaine. Test commit → PR → tests auto → dbt compare. Jean reprend le sujet lundi 17/02.</textarea></td>
+                        12/02 : Focus CI/CD cette semaine.
+19/02 : Jean a créé des modèles avec layers, un job orchestré sur dbt Cloud. Tests qualité, doc et CI/CD en cours.</textarea>
                     </tr>
                     <tr>
-                        <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
+                        <td><div class="checkbox-wrapper"><input type="checkbox" checked></div></td>
                         <td><strong>Semaine 3</strong></td>
                         <td><input type="text" class="kpi-input" value="Sem. 17 Fév"></td>
                         <td>Préparation workshop Data Analysts, CI/CD Data Engineers</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">12/02 : Préparation du workshop en présentiel. Sélectionner un projet Power BI pour ramener les transfos dans dbt. Vérifier comptes Azure DevOps. Créer projet Fusion.</textarea></td>
+                        <td><span class="status-badge status-in-progress">En cours</span></td>
+                        <td><textarea class="notes-textarea">12/02 : Préparation du workshop en présentiel. Sélectionner un projet Power BI pour ramener les transfos dans dbt.
+19/02 : Jean avance sur les modèles. Morgane teste la création autonome semaine prochaine. CI/CD et qualité à compléter.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
@@ -2069,7 +2077,8 @@
                         <td><input type="text" class="kpi-input" value="Sem. 24 Fév"></td>
                         <td>Tests Data Analysts, bilan partiel</td>
                         <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">12/02 : Équipe dbt en déplacement US (événement entreprise). Workshop reporté si présentiel souhaité.</textarea></td>
+                        <td><textarea class="notes-textarea">12/02 : Équipe dbt en déplacement US (événement entreprise). Workshop reporté si présentiel souhaité.
+19/02 : Point de suivi annulé cette semaine (événement US). Prochain point : mardi 10 mars à 10h.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
@@ -2077,7 +2086,8 @@
                         <td><input type="text" class="kpi-input" value="Sem. 2 ou 9 Mars"></td>
                         <td>Workshop Data Analysts en présentiel (2h)</td>
                         <td><span class="status-badge status-pending">Planifié</span></td>
-                        <td><textarea class="notes-textarea">12/02 : Options : distance sem. 2 mars OU présentiel sem. 9 mars (préférence équipe). Charlotte + Olivier se déplacent chez Xpollens.</textarea></td>
+                        <td><textarea class="notes-textarea">12/02 : Options : distance sem. 2 mars OU présentiel sem. 9 mars.
+19/02 : Workshop avec Emma prévu semaine du 16 mars (modèles orientés charges). Charlotte enverra options de disponibilité mi-mars.</textarea></td>
                     </tr>
                     <tr>
                         <td><div class="checkbox-wrapper"><input type="checkbox"></div></td>
@@ -2085,7 +2095,8 @@
                         <td><input type="text" class="kpi-input" value="Mi-Mars"></td>
                         <td>Mesure KPIs, business case, décision Go/No-Go</td>
                         <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><textarea class="notes-textarea">12/02 : Après workshop. Inclura comparaison TCO dbt Core vs Platform (questionnaire Olivier).</textarea></td>
+                        <td><textarea class="notes-textarea">12/02 : Après workshop. Inclura comparaison TCO dbt Core vs Platform.
+19/02 : BVA à compléter d'ici mi-mars. Olivier envoie questionnaire TCO avant fin de semaine. Exec Dinner le 19 mars avec François-Xavier Pirel (TF1) et management dbt.</textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -2140,27 +2151,41 @@
             </div>
 
             <div class="issue-box">
+                <strong>⚠️ Limitation Connecteur Synapse (19/02)</strong><br><br>
+                <strong>Constat:</strong> Le connecteur Synapse ne supporte pas la stratégie d'incrémentation en merge → utilisation de delete-insert.<br>
+                <strong>Note:</strong> Le connecteur n'apparaît pas dans la documentation des types de stratégies supportées.<br>
+                <strong>Impact:</strong> À évaluer selon les cas d'usage (tables volumineuses avec mises à jour partielles).
+            </div>
+            <div class="issue-box">
+                <strong>⚠️ Lecture Delta par Pool Dédié (19/02)</strong><br><br>
+                <strong>Constat:</strong> Problème de lecture des tables Delta par le pool SQL dédié.<br>
+                <strong>Statut:</strong> Sujet Microsoft en cours de résolution.
+            </div>
+            <div class="issue-box">
                 <strong>⚠️ À Valider:</strong> Choix du Tier (Team vs Enterprise)<br><br>
                 <strong>Note (12/02):</strong> Le POC est sur la version Enterprise avec Canvas, Copilot, etc.<br>
                 <strong>Action:</strong> Morgane doit confirmer le nombre de licences développeur (Data Engineers + Data Analysts).
             </div>
 
             <div class="issue-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%); border-left: 4px solid #1976d2;">
-                <strong>📋 Prochaines étapes (12/02)</strong><br><br>
+                <strong>📋 Prochaines étapes (19/02)</strong><br><br>
                 <strong>Data Engineers (Sofiane, Jean, Nadja):</strong><br>
-                • Tester CI/CD automatique (commit → PR → tests → dbt compare)<br>
-                • Comparer migration Core → Fusion avec/sans plateforme<br>
-                • Jean reprend le sujet lundi 17/02<br><br>
-                <strong>Data Analysts (Emma + équipe):</strong><br>
-                • Workshop présentiel prévu semaine du 9 mars (ou distance sem. 2 mars)<br>
-                • Objectif : recréer une logique Power BI existante dans dbt Platform<br>
-                • Connexion projet dbt → Power BI à tester<br><br>
+                • Tester qualité des données, documentation et CI/CD (semaines à venir)<br>
+                • Tester pipeline end-to-end incluant exposition sur Power BI<br>
+                • Comparer migration Core → Fusion avec/sans plateforme<br><br>
+                <strong>Data Analysts (Morgane, Emma):</strong><br>
+                • Morgane : tester la création de modèles de manière autonome (semaine prochaine)<br>
+                • Workshop avec Emma prévu semaine du 16 mars (modèles orientés charges)<br>
+                • Emma revient le 11 mars<br><br>
                 <strong>Charlotte:</strong><br>
-                • Envoyer doc connexion Power BI<br>
-                • Préparer agenda workshop<br>
-                • Routine de suivi : jeudi 10h30-11h<br><br>
+                • Rechercher recommandations SA sur connexion Power BI<br>
+                • Envoyer options de disponibilité pour workshop mi-mars<br>
+                • Préparer agenda workshop<br><br>
                 <strong>Olivier:</strong><br>
-                • Envoyer questionnaire TCO pour calculateur ROI
+                • Envoyer questionnaire TCO (comparaison dbt Core vs Platform) avant fin de semaine<br><br>
+                <strong>Prochain point de suivi :</strong> mardi 10 mars à 10h<br>
+                <strong>BVA :</strong> à compléter d'ici mi-mars<br>
+                <strong>Exec Dinner :</strong> 19 mars avec François-Xavier Pirel (TF1) et management dbt
             </div>
 
             <!-- Decision Summary -->
